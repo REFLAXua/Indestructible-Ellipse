@@ -34,6 +34,7 @@ public class EnemyHealth : MonoBehaviour
 
     void EnemyDie()
     {
+        GetComponentInChildren<Canvas>().enabled = false;
         GetComponent<EnemyMovement>().isDead = true;
         agent.enabled = false;
 

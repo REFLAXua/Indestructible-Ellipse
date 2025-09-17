@@ -82,7 +82,7 @@ public class EnemyMovement : MonoBehaviour
                 break;
 
             case AIState.Patrolling:
-                if (agent.remainingDistance <= 0.2f)
+                if (agent.enabled && agent.isOnNavMesh && agent.remainingDistance <= 0.2f)
                 {
                     currentWaypoint++;
                     if (currentWaypoint >= wayPoints.childCount)

@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    private bool isOnGround = false;
+    public bool isOnGround = false;
 
     public float baseSpeed = 5f;
     public float sprintSpeed = 7f;
@@ -14,6 +14,14 @@ public class PlayerMovement : MonoBehaviour
     public float jumpTime = 0.2f;
     private float jumpTimer;
     private bool isInAir = false;
+    public bool hasJumped = false;
+
+    public bool isPlayerSprinting = false;
+    public bool isPlayerJumping = false;
+    public bool noStamina = false;
+    public bool consumingStamina = false;
+
+    private PlayerStamina playerStamina;
 
     public float playerStunTime = 1f;
     private float playerStunTimeTimer = 0f;
@@ -32,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        playerStamina = GetComponent<PlayerStamina>();
         playerCamera = GameObject.Find("Main Camera").GetComponent<PlayerCamera>();
         stunSensitivity = playerCamera.sensitivity;
         baseSensitivity = stunSensitivity;
@@ -49,14 +58,23 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
 
+        // Sprint
         if (!isSlowed && !isInAir)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && !noStamina && !playerStamina.isExhausted && move.magnitude > 0)
+            {
+                consumingStamina = true;
                 currentSpeed = sprintSpeed;
+                isPlayerSprinting = true;
+            }
             else
+            {
+                consumingStamina = false;
                 currentSpeed = baseSpeed;
+                isPlayerSprinting = false;
+            }
         }
-
+        
         if (!playerStun)
         {
         controller.Move(move * currentSpeed * Time.deltaTime);
@@ -73,10 +91,12 @@ public class PlayerMovement : MonoBehaviour
         if (isOnGround)
         {
             isInAir = false;
+            hasJumped = false;
         }
         // Jump
-        if (isOnGround && Input.GetButton("Jump") && !playerStun)
+        if (isOnGround && Input.GetButton("Jump") && !playerStun && playerStamina.currentStamina > 15)
         {
+            hasJumped = true;
             isInAir = true;
             jumpTimer = jumpTime;
             velocity.y = jumpForce;
