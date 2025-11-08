@@ -19,13 +19,13 @@ public class PlayerStamina : MonoBehaviour
         set { _currentStamina = Mathf.Clamp(value, 0, maxStamina); }
     }
 
-    public PlayerMovement playerMovement;
+    [Tooltip("Put the PlayerMovement script")]
+    [SerializeField] private PlayerMovement playerMovement;
     private bool isRegenerating = false;
     private Coroutine regenCoroutine = null;
 
     void Start()
     {
-        playerMovement = GetComponent<PlayerMovement>();
         currentStamina = maxStamina;
     }
 

@@ -19,6 +19,8 @@ public class VoxelTilePlacerWfc : MonoBehaviour
     private bool shouldBuildNavMesh = false;
     private float navMeshBuildDelay = 0f;
 
+    private bool enemiesPlaced = false;
+
     private void Start()
     {
         spawnedTiles = new VoxelTile[MapSize.x, MapSize.y];
@@ -148,6 +150,18 @@ public class VoxelTilePlacerWfc : MonoBehaviour
                 {
                     isPlacingTiles = false;
                 }
+            }
+        }
+
+        // Enemies placement
+        if (!isPlacingTiles && !enemiesPlaced)
+        {
+            EnemyPlacer enemyPlacer = FindObjectOfType<EnemyPlacer>();
+            if (enemyPlacer != null)
+            {
+                enemyPlacer.spawnedTiles = spawnedTiles;
+                enemyPlacer.PlaceEnemiesAndWaypoints();
+                enemiesPlaced = true;
             }
         }
 

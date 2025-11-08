@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerFunctions : MonoBehaviour
 {
-    [SerializeField] private PlayerCamera cameraFunc;
+    [Tooltip("Put the CinemachineCameraController script")]
+    [SerializeField] private CinemachineCameraController cameraFunc;
 
     public void SensitivitySlow()
     {

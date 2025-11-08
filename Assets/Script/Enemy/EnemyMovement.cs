@@ -10,7 +10,7 @@ public class EnemyMovement : MonoBehaviour
         Idle, Patrolling, Chasing, Attacking
     }
 
-    [SerializeField] private Transform wayPoints;
+    public Transform wayPoints;
     [SerializeField] private float waitAtPoint = 2f;
     private int currentWaypoint;
     private float waitCounter;

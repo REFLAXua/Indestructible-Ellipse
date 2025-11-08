@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public float applyStunSensitivity = 0.05f;
     private float baseSensitivity;
 
-    private PlayerCamera playerCamera;
+    private CinemachineCameraController playerCamera;
 
     public float gravity = -9.81f;
     private CharacterController controller;
@@ -41,14 +41,30 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         playerStamina = GetComponent<PlayerStamina>();
-        playerCamera = GameObject.Find("Main Camera").GetComponent<PlayerCamera>();
-        stunSensitivity = playerCamera.sensitivity;
-        baseSensitivity = stunSensitivity;
-        playerStunTimeTimer = playerStunTime;
         controller = GetComponent<CharacterController>();
         currentSpeed = baseSpeed;
-        stunMark = transform.Find("EffectUI/StunMark").gameObject;
-        stunMark.SetActive(false);
+
+        GameObject pivotObj = GameObject.Find("CameraPivot");
+        if (pivotObj != null)
+        {
+            playerCamera = pivotObj.GetComponent<CinemachineCameraController>();
+        }
+        else
+        {
+            Debug.LogWarning("CameraPivot not found in the scene.");
+        }
+
+        if (playerCamera != null)
+        {
+            stunSensitivity = playerCamera.sensitivity;
+            baseSensitivity = stunSensitivity;
+        }
+
+        playerStunTimeTimer = playerStunTime;
+
+        stunMark = transform.Find("EffectUI/StunMark")?.gameObject;
+        if (stunMark != null)
+            stunMark.SetActive(false);
     }
 
     private void Update()
@@ -74,10 +90,10 @@ public class PlayerMovement : MonoBehaviour
                 isPlayerSprinting = false;
             }
         }
-        
+
         if (!playerStun)
         {
-        controller.Move(move * currentSpeed * Time.deltaTime);
+            controller.Move(move * currentSpeed * Time.deltaTime);
         }
 
         if (controller.isGrounded && velocity.y < 0)
@@ -93,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
             isInAir = false;
             hasJumped = false;
         }
+
         // Jump
         if (isOnGround && Input.GetButton("Jump") && !playerStun && playerStamina.currentStamina > 15)
         {
@@ -107,28 +124,38 @@ public class PlayerMovement : MonoBehaviour
         else
             velocity.y += gravity * Time.deltaTime;
 
-        //Stun
-        if (playerStun)
+        // Stun logic
+        if (playerStun && playerCamera != null)
         {
-            stunMark.SetActive(true);
+            if (stunMark != null)
+                stunMark.SetActive(true);
+
             stunSensitivity = applyStunSensitivity;
             playerCamera.sensitivity = stunSensitivity;
-            var attackStun = GameObject.Find("Player").GetComponent<PlayerMeleeAttack>();
-            attackStun.playerStunAttack = true;
+
+            var attackStun = GetComponent<PlayerMeleeAttack>();
+            if (attackStun != null)
+                attackStun.playerStunAttack = true;
+
             playerStunTimeTimer -= Time.deltaTime;
             if (playerStunTimeTimer <= 0)
             {
-                stunMark.SetActive(false);
+                if (stunMark != null)
+                    stunMark.SetActive(false);
+
                 playerStunTimeTimer = playerStunTime;
                 playerStun = false;
-                attackStun.playerStunAttack = false;
+
+                if (attackStun != null)
+                    attackStun.playerStunAttack = false;
+
                 stunSensitivity = baseSensitivity;
                 playerCamera.sensitivity = stunSensitivity;
             }
         }
     }
 
-    //Slowing 
+    // Slowing 
     private bool isSlowed = false;
 
     public void ApplySlow(float slowAmount, float duration)
@@ -148,5 +175,4 @@ public class PlayerMovement : MonoBehaviour
         isSlowed = false;
         currentSpeed = baseSpeed;
     }
-
 }
