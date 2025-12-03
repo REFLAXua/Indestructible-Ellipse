@@ -1,4 +1,3 @@
-repository "LetsRoll/LetsRoll@7972153636605@cloud"
+rep "LetsRoll/LetsRoll@7972153636605@cloud"
   path "/"
-    br "/main"
-    co "/main"
+    smartbranch "/main"

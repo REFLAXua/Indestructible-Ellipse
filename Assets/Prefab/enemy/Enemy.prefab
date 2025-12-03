@@ -164,7 +164,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 32fdf2b5d56ca5c44986000df01c7ee4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -301,14 +301,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5318828052612656652}
-  - component: {fileID: 498641693919976458}
   m_Layer: 0
   m_Name: StunMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5318828052612656652
 Transform:
   m_ObjectHideFlags: 0
@@ -325,18 +324,6 @@ Transform:
   - {fileID: 379047500109501919}
   m_Father: {fileID: 4266851035412721286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &498641693919976458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512477903443066507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ee85cab11f7e18498bd986761c50796, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2601976528470070935
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +357,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4279562228005625462
 GameObject:
@@ -383,12 +370,11 @@ GameObject:
   - component: {fileID: 2382649061309407358}
   - component: {fileID: 1208516408082364613}
   - component: {fileID: 1096721233081042863}
-  - component: {fileID: 2814714775350282456}
-  - component: {fileID: 1551767706538496096}
   - component: {fileID: 3634619888343095254}
   - component: {fileID: 6375987577077493972}
-  - component: {fileID: 3772063616216056485}
-  - component: {fileID: 1696031309730527453}
+  - component: {fileID: 8051815652755749418}
+  - component: {fileID: 4536076935505641116}
+  - component: {fileID: 2995040550277170410}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -461,41 +447,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2814714775350282456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279562228005625462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9dc02c81ada6da4ca2a9527815dc638, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wayPoints: {fileID: 0}
-  waitAtPoint: 2
-  currentState: 0
-  chaseRange: 10
-  suspiciousTime: 2
-  enemyAttackRange: 1.5
-  attackTime: 2
-  enemyStunTime: 0.5
-  knockBackForce: 7
-  isDead: 0
---- !u!114 &1551767706538496096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279562228005625462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9a3ef48a5056b64496dd5e7a87a23a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyHealth: 10
 --- !u!136 &3634619888343095254
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -544,9 +495,9 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &3772063616216056485
+--- !u!114 &8051815652755749418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -555,14 +506,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4279562228005625462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2af2b93c0c496e94db471723fc3521c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 738d6dfbb24ee224eb3924a443365ba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyDamage: 2
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!114 &1696031309730527453
+  _config: {fileID: 11400000, guid: 20e8b80499349f042a8749a36cd518e0, type: 2}
+  _stunVisuals: {fileID: 5149944618779684341}
+--- !u!114 &4536076935505641116
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -571,9 +520,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 4279562228005625462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cc78b9d9ecaf8c489cb93dec40d0b66, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ea9bb805af15a141b4e14d0eeee1589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 5
+--- !u!114 &2995040550277170410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4279562228005625462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ea6c9536b38974193f2e6e413e85bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: {fileID: 4536076935505641116}
+  _healthBarFill: {fileID: 1124905829183794370}
+  _healthSlider: {fileID: 4611331503158639807}
+  _canvas: {fileID: 2300784510942089443}
+  _billboard: 1
 --- !u!1 &4984644486710493310
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,8 +649,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5149944618779684341
 GameObject:
@@ -695,14 +662,13 @@ GameObject:
   m_Component:
   - component: {fileID: 379047500109501919}
   - component: {fileID: 7548347027086419656}
-  - component: {fileID: 5054163097473807289}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &379047500109501919
 Transform:
   m_ObjectHideFlags: 0
@@ -770,19 +736,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5054163097473807289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5149944618779684341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0bc94fa2586fcd498105324bb2ff79f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 180
 --- !u!1 &6050168869204213704
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,7 +829,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 32fdf2b5d56ca5c44986000df01c7ee4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -927,9 +880,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 654075896219742547}
   - {fileID: 8297074059604707706}
   - {fileID: 6637690721065540013}
-  - {fileID: 654075896219742547}
   m_Father: {fileID: 5005769800405839702}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -982,9 +935,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 10
+  m_MaxValue: 5
   m_WholeNumbers: 0
-  m_Value: 5.95
+  m_Value: 5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1132,7 +1085,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 32fdf2b5d56ca5c44986000df01c7ee4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1189,7 +1142,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7309476190849407001
 CanvasRenderer:
@@ -1223,7 +1176,7 @@ MonoBehaviour:
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
