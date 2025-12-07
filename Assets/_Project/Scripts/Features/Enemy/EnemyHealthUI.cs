@@ -8,17 +8,23 @@ namespace Features.Enemy
         [Header("References")]
         [SerializeField] private EnemyHealth _health;
         [SerializeField] private Image _healthBarFill;
-        [SerializeField] private Slider _healthSlider; // Support for Slider component
+        [SerializeField] private Slider _healthSlider;
         [SerializeField] private Canvas _canvas;
 
         [Header("Settings")]
         [SerializeField] private bool _billboard = true;
-    
+
         private Transform _cameraTransform;
 
         private void Awake()
         {
-            // 1. Find Health Component
+            if (!FindHealthComponent()) return;
+            FindUIComponents();
+            CacheCamera();
+        }
+
+        private bool FindHealthComponent()
+        {
             if (_health == null)
             {
                 _health = GetComponentInParent<EnemyHealth>();
@@ -29,24 +35,23 @@ namespace Features.Enemy
             {
                 Debug.LogError($"[EnemyHealthUI] Could not find EnemyHealth component on {gameObject.name} or its parents!", gameObject);
                 enabled = false;
-                return;
+                return false;
             }
 
-            // 2. Find Canvas
-            if (_canvas == null) _canvas = GetComponent<Canvas>();
+            return true;
+        }
 
-            // 3. Find Slider (Preferred if using Slider prefab)
+        private void FindUIComponents()
+        {
+            if (_canvas == null) _canvas = GetComponent<Canvas>();
             if (_healthSlider == null) _healthSlider = GetComponentInChildren<Slider>();
-            // Also check parent if the script is on the Fill object itself
             if (_healthSlider == null) _healthSlider = GetComponentInParent<Slider>();
 
-            // 4. Find Fill Image (Fallback or manual assignment)
             if (_healthBarFill == null && _healthSlider == null)
             {
                 var images = GetComponentsInChildren<Image>(true);
                 foreach (var img in images)
                 {
-                    // Look for something that looks like a fill bar
                     if (img.type == Image.Type.Filled || img.name.Contains("Fill"))
                     {
                         _healthBarFill = img;
@@ -55,15 +60,14 @@ namespace Features.Enemy
                 }
             }
 
-            // Removed auto-fix for Sliced images. 
-            // If using Sliced, a Slider component is required to handle the sizing.
-            
             if (_healthBarFill == null && _healthSlider == null)
             {
                 Debug.LogError($"[EnemyHealthUI] Could not find a Slider OR a Fill Image on {gameObject.name}.", gameObject);
             }
+        }
 
-            // 5. Cache Camera
+        private void CacheCamera()
+        {
             if (UnityEngine.Camera.main != null)
             {
                 _cameraTransform = UnityEngine.Camera.main.transform;
@@ -93,13 +97,11 @@ namespace Features.Enemy
 
             if (_cameraTransform == null)
             {
-                _cameraTransform = UnityEngine.Camera.main?.transform;
+                CacheCamera();
+                if (_cameraTransform == null) return;
             }
 
-            if (_cameraTransform != null)
-            {
-                _canvas.transform.rotation = _cameraTransform.rotation;
-            }
+            _canvas.transform.rotation = _cameraTransform.rotation;
         }
 
         private void UpdateHealthBar(float current, float max)
@@ -108,13 +110,11 @@ namespace Features.Enemy
 
             if (_healthSlider != null)
             {
-                // Sync slider range with health values
                 _healthSlider.maxValue = max;
                 _healthSlider.value = current;
             }
             else if (_healthBarFill != null)
             {
-                // Fallback for simple Image fill
                 float pct = Mathf.Clamp01(current / max);
                 _healthBarFill.fillAmount = pct;
             }

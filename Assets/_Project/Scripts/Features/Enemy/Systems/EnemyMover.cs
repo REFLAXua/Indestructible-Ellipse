@@ -11,47 +11,55 @@ namespace Features.Enemy.Systems
         private EnemyBlackboard _blackboard;
         private Vector3 _knockbackVelocity;
         private bool _isKnockedBack;
+        private bool _initialized;
 
-        // Helper to check if we can safely use the NavMeshAgent
         private bool IsAgentValid => _agent != null && _agent.isActiveAndEnabled && _agent.isOnNavMesh;
 
         public void Initialize(EnemyBlackboard blackboard)
         {
             _blackboard = blackboard;
             _agent = GetComponent<NavMeshAgent>();
-            
-            if (_blackboard?.Config != null)
+
+            if (_blackboard?.Config != null && _agent != null)
             {
                 _agent.speed = _blackboard.Config.MoveSpeed;
                 _agent.angularSpeed = 360f;
-                _agent.acceleration = 8f;
+                _agent.acceleration = _blackboard.Config.Acceleration;
             }
+            
+            _initialized = true;
         }
 
         public void OnUpdate()
         {
+            if (!_initialized) return;
+
             if (_isKnockedBack)
             {
-                _knockbackVelocity = Vector3.Lerp(_knockbackVelocity, Vector3.zero, Time.deltaTime * 5f);
-                
-                if (_knockbackVelocity.magnitude < 0.1f)
-                {
-                    _isKnockedBack = false;
-                    _knockbackVelocity = Vector3.zero;
-                    
-                    // Only resume if agent is valid
-                    if (IsAgentValid) _agent.isStopped = false;
-                }
-                else
-                {
-                    transform.position += _knockbackVelocity * Time.deltaTime;
-                }
+                ProcessKnockback();
+            }
+        }
+
+        private void ProcessKnockback()
+        {
+            float knockbackDrag = _blackboard?.Config != null ? 5f : 5f;
+            _knockbackVelocity = Vector3.Lerp(_knockbackVelocity, Vector3.zero, Time.deltaTime * knockbackDrag);
+
+            if (_knockbackVelocity.magnitude < 0.1f)
+            {
+                _isKnockedBack = false;
+                _knockbackVelocity = Vector3.zero;
+
+                if (IsAgentValid) _agent.isStopped = false;
+            }
+            else
+            {
+                transform.position += _knockbackVelocity * Time.deltaTime;
             }
         }
 
         public void MoveTo(Vector3 destination, float speed)
         {
-            // Check validity before trying to move
             if (_isKnockedBack || !IsAgentValid) return;
 
             _agent.speed = speed;
@@ -69,7 +77,7 @@ namespace Features.Enemy.Systems
         {
             _isKnockedBack = true;
             _knockbackVelocity = direction.normalized * force;
-            
+
             if (IsAgentValid) _agent.isStopped = true;
         }
 

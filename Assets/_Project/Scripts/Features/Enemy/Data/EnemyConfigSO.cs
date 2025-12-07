@@ -23,18 +23,30 @@ namespace Features.Enemy.Data
         public float AttackRange = 1.5f;
         public float AttackDamage = 10f;
         public float AttackCooldown = 2f;
-        public float AttackWindupTime = 0.5f; // Delay before damage
+        public float AttackWindupTime = 0.5f;
+        public float AttackRangeTolerance = 0.5f;
 
         [Header("Health")]
         public float MaxHealth = 50f;
         public float StunDuration = 1f;
-        public float KnockbackResistance = 0f; // 0 to 1
+        public float KnockbackResistance = 0f;
+        public float KnockbackForce = 5f;
 
         [Header("Death")]
         public float DeathDuration = 7f;
-        public float SinkDelay = 6.5f; // Time before sinking starts
+        public float SinkDelay = 6.5f;
         public float SinkSpeed = 2f;
         public float FinalSinkSpeed = 1.2f;
         public float DeathRotationSpeed = 7f;
+        public float FinalSinkPhaseTime = 2f;
+
+        [Header("Behavior")]
+        public float IdleToPatrolDelay = 2f;
+        public float PatrolRadius = 10f;
+        public float StunRotationSpeed = 200f;
+        public float DetectionLossMultiplier = 1.2f;
+
+        [Header("Visual Feedback")]
+        public float HitFlashDuration = 0.15f;
     }
 }

@@ -14,11 +14,8 @@ namespace Features.Enemy.States.Concrete
         {
             Controller.Mover.Stop();
             Controller.SetWalking(false);
-            
-            if (Controller.Blackboard.Target != null)
-            {
-                Controller.transform.LookAt(Controller.Blackboard.Target);
-            }
+
+            RotateTowardsTargetHorizontal();
 
             if (Time.time >= _lastAttackTime + Controller.Config.AttackCooldown)
             {
@@ -41,21 +38,21 @@ namespace Features.Enemy.States.Concrete
 
         public void TriggerDamage()
         {
-            if (Controller.Blackboard.Target != null)
-            {
-                float distance = Vector3.Distance(Controller.transform.position, Controller.Blackboard.Target.position);
-                if (distance <= Controller.Config.AttackRange + 0.5f)
-                {
-                    var player = Controller.Blackboard.Target.GetComponent<Features.Player.PlayerController>();
-                    if (player != null)
-                    {
-                        Vector3 knockbackDir = (player.transform.position - Controller.transform.position).normalized;
-                        // Flatten knockback to avoid shooting player into the air excessively, unless intended
-                        knockbackDir.y = 0.2f; 
-                        knockbackDir.Normalize();
+            if (Controller.Blackboard.Target == null) return;
 
-                        player.TakeDamage(Controller.Config.AttackDamage, knockbackDir);
-                    }
+            float distance = Vector3.Distance(Controller.transform.position, Controller.Blackboard.Target.position);
+            float effectiveRange = Controller.Config.AttackRange + Controller.Config.AttackRangeTolerance;
+
+            if (distance <= effectiveRange)
+            {
+                var player = Controller.Blackboard.Target.GetComponent<Features.Player.PlayerController>();
+                if (player != null)
+                {
+                    Vector3 knockbackDir = (player.transform.position - Controller.transform.position).normalized;
+                    knockbackDir.y = 0.2f;
+                    knockbackDir.Normalize();
+
+                    player.TakeDamage(Controller.Config.AttackDamage, knockbackDir);
                 }
             }
         }
@@ -63,6 +60,20 @@ namespace Features.Enemy.States.Concrete
         public void FinishAttack()
         {
             StateMachine.ChangeState(Controller.ChaseState);
+        }
+
+        private void RotateTowardsTargetHorizontal()
+        {
+            if (Controller.Blackboard.Target == null) return;
+
+            Vector3 direction = Controller.Blackboard.Target.position - Controller.transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Controller.transform.rotation = targetRotation;
+            }
         }
     }
 }

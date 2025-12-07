@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Features.Map
@@ -16,7 +15,7 @@ namespace Features.Map
                 for (int y = 1; y < mapSize.y - 1; y++)
                 {
                     VoxelTile selectedTile = SelectTile(x, y, spawnedTiles, availableTiles);
-                    
+
                     if (selectedTile != null)
                     {
                         spawnedTiles[x, y] = selectedTile;
@@ -39,10 +38,10 @@ namespace Features.Map
 
             foreach (VoxelTile tile in availableTiles)
             {
-                if (CanAppendTile(spawnedTiles[x - 1, y], tile, Direction.Left) &&
-                    CanAppendTile(spawnedTiles[x + 1, y], tile, Direction.Right) &&
-                    CanAppendTile(spawnedTiles[x, y - 1], tile, Direction.Back) &&
-                    CanAppendTile(spawnedTiles[x, y + 1], tile, Direction.Forward))
+                if (TileComparer.CanAppendTile(spawnedTiles[x - 1, y], tile, Direction.Left) &&
+                    TileComparer.CanAppendTile(spawnedTiles[x + 1, y], tile, Direction.Right) &&
+                    TileComparer.CanAppendTile(spawnedTiles[x, y - 1], tile, Direction.Back) &&
+                    TileComparer.CanAppendTile(spawnedTiles[x, y + 1], tile, Direction.Forward))
                 {
                     candidates.Add(tile);
                 }
@@ -50,44 +49,7 @@ namespace Features.Map
 
             if (candidates.Count == 0) return null;
 
-            return GetRandomTile(candidates);
-        }
-
-        private VoxelTile GetRandomTile(List<VoxelTile> candidates)
-        {
-            float totalWeight = candidates.Sum(t => t.Weight);
-            float randomValue = Random.Range(0, totalWeight);
-            float currentSum = 0;
-
-            foreach (var tile in candidates)
-            {
-                currentSum += tile.Weight;
-                if (randomValue < currentSum)
-                {
-                    return tile;
-                }
-            }
-
-            return candidates.Last();
-        }
-
-        private bool CanAppendTile(VoxelTile existingTile, VoxelTile tileToAppend, Direction direction)
-        {
-            if (existingTile == null) return true;
-
-            switch (direction)
-            {
-                case Direction.Right:
-                    return Enumerable.SequenceEqual(existingTile.ColorsRight, tileToAppend.ColorsLeft);
-                case Direction.Left:
-                    return Enumerable.SequenceEqual(existingTile.ColorsLeft, tileToAppend.ColorsRight);
-                case Direction.Forward:
-                    return Enumerable.SequenceEqual(existingTile.ColorsForward, tileToAppend.ColorsBack);
-                case Direction.Back:
-                    return Enumerable.SequenceEqual(existingTile.ColorsBack, tileToAppend.ColorsForward);
-                default:
-                    return false;
-            }
+            return TileComparer.GetRandomTile(candidates);
         }
     }
 }

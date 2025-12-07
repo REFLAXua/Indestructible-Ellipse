@@ -5,12 +5,11 @@ namespace Features.Enemy.States.Concrete
     public class EnemyStunnedState : EnemyStateBase
     {
         private float _stunTimer;
+        private Core.Utils.BillBoard _billboard;
 
         public EnemyStunnedState(EnemyController controller, EnemyStateMachine stateMachine) : base(controller, stateMachine)
         {
         }
-
-        private Core.Utils.BillBoard _billboard;
 
         public override void Enter()
         {
@@ -19,9 +18,10 @@ namespace Features.Enemy.States.Concrete
             Controller.SetStunVisuals(true);
             _stunTimer = 0f;
 
-            if (Controller.StunVisuals != null)
+            var stunVisuals = Controller.StunVisuals;
+            if (stunVisuals != null)
             {
-                _billboard = Controller.StunVisuals.GetComponent<Core.Utils.BillBoard>();
+                _billboard = stunVisuals.GetComponent<Core.Utils.BillBoard>();
             }
         }
 
@@ -31,8 +31,7 @@ namespace Features.Enemy.States.Concrete
 
             if (_billboard != null)
             {
-                // Rotate 200 degrees per second
-                _billboard.ZRotation += 200f * Time.deltaTime;
+                _billboard.ZRotation += Controller.Config.StunRotationSpeed * Time.deltaTime;
             }
 
             if (_stunTimer >= Controller.Config.StunDuration)
@@ -48,6 +47,7 @@ namespace Features.Enemy.States.Concrete
             {
                 _billboard.ZRotation = 0f;
             }
+            _billboard = null;
         }
     }
 }

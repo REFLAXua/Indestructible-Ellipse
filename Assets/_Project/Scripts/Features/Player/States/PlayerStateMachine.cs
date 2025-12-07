@@ -4,15 +4,15 @@ namespace Features.Player.States
 {
     public abstract class PlayerState
     {
-        protected PlayerController _player;
-        protected PlayerStateMachine _stateMachine;
-        protected Data.PlayerConfigSO _config;
+        protected readonly PlayerController Player;
+        protected readonly PlayerStateMachine StateMachine;
+        protected readonly Data.PlayerConfigSO Config;
 
-        public PlayerState(PlayerController player, PlayerStateMachine stateMachine)
+        protected PlayerState(PlayerController player, PlayerStateMachine stateMachine)
         {
-            _player = player;
-            _stateMachine = stateMachine;
-            _config = player.Config;
+            Player = player;
+            StateMachine = stateMachine;
+            Config = player.Config;
         }
 
         public virtual void Enter() { }
@@ -21,21 +21,21 @@ namespace Features.Player.States
         public virtual void PhysicsUpdate() { }
     }
 
-    public class PlayerStateMachine
+    public sealed class PlayerStateMachine
     {
         public PlayerState CurrentState { get; private set; }
 
         public void Initialize(PlayerState startingState)
         {
             CurrentState = startingState;
-            CurrentState.Enter();
+            CurrentState?.Enter();
         }
 
         public void ChangeState(PlayerState newState)
         {
-            CurrentState.Exit();
+            CurrentState?.Exit();
             CurrentState = newState;
-            CurrentState.Enter();
+            CurrentState?.Enter();
         }
     }
 }

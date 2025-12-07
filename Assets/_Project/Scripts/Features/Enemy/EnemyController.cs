@@ -4,7 +4,6 @@ using Features.Enemy.Data;
 using Features.Enemy.States;
 using Features.Enemy.States.Concrete;
 using Features.Enemy.Systems;
-using System.Collections.Generic;
 
 namespace Features.Enemy
 {
@@ -13,16 +12,20 @@ namespace Features.Enemy
     [RequireComponent(typeof(EnemyHealth))]
     public class EnemyController : MonoBehaviour
     {
+        [Header("Configuration")]
         [SerializeField] private EnemyConfigSO _config;
-        public EnemyConfigSO Config => _config;
+        
+        [Header("Visuals")]
+        [SerializeField] private GameObject _stunVisuals;
 
-        // Systems
+        public EnemyConfigSO Config => _config;
+        public GameObject StunVisuals => _stunVisuals;
+
         public EnemyBlackboard Blackboard { get; private set; }
         public EnemyMover Mover { get; private set; }
         public EnemyPerception Perception { get; private set; }
         public EnemyStateMachine StateMachine { get; private set; }
 
-        // States
         public EnemyIdleState IdleState { get; private set; }
         public EnemyPatrolState PatrolState { get; private set; }
         public EnemyChaseState ChaseState { get; private set; }
@@ -30,78 +33,37 @@ namespace Features.Enemy
         public EnemyStunnedState StunnedState { get; private set; }
         public EnemyDeadState DeadState { get; private set; }
 
-        // Components
         public Animator Animator { get; private set; }
         public EnemyHealth Health { get; private set; }
 
-        [Header("Visuals")]
-        [SerializeField] private GameObject _stunVisuals;
-
-        // Animation Parameters
-        private int _walkParamId;
-        private int _attackParamId;
-        // private int _hitParamId;
-        private int _dieParamId;
+        private EnemyAnimationHandler _animationHandler;
 
         private void Awake()
         {
+            CacheComponents();
+            InitializeBlackboardAndSystems();
+            InitializeStateMachine();
+            SubscribeToHealthEvents();
+            SetupStunVisuals();
+        }
+
+        private void CacheComponents()
+        {
             Animator = GetComponent<Animator>();
             Health = GetComponent<EnemyHealth>();
-            
-            InitializeAnimatorParameters();
+        }
 
-            // 1. Create Blackboard
+        private void InitializeBlackboardAndSystems()
+        {
             Blackboard = new EnemyBlackboard(_config);
 
-            // 2. Initialize Systems
             Mover = gameObject.AddComponent<EnemyMover>();
             Perception = gameObject.AddComponent<EnemyPerception>();
-            
+
             Mover.Initialize(Blackboard);
             Perception.Initialize(Blackboard);
 
-            // 3. Initialize State Machine
-            InitializeStateMachine();
-
-            // 4. Subscribe to Health Events
-            if (Health != null)
-            {
-                Health.OnHit += OnHit;
-                Health.Initialize(_config.MaxHealth);
-            }
-
-            // 5. Ensure Stun Visuals have Billboard
-            if (_stunVisuals != null)
-            {
-                if (_stunVisuals.GetComponent<Core.Utils.BillBoard>() == null)
-                {
-                    _stunVisuals.AddComponent<Core.Utils.BillBoard>();
-                }
-            }
-        }
-
-        private void Start()
-        {
-            // Initial Placement Logic (if needed)
-            if (!GetComponent<NavMeshAgent>().isOnNavMesh)
-            {
-                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
-                {
-                    GetComponent<NavMeshAgent>().Warp(hit.position);
-                }
-            }
-
-            StateMachine.Initialize(IdleState);
-        }
-
-        private void Update()
-        {
-            // Update Systems
-            Perception.OnUpdate();
-            Mover.OnUpdate();
-
-            // Update State
-            StateMachine.CurrentState.LogicUpdate();
+            _animationHandler = new EnemyAnimationHandler(Animator);
         }
 
         private void InitializeStateMachine()
@@ -116,9 +78,55 @@ namespace Features.Enemy
             DeadState = new EnemyDeadState(this, StateMachine);
         }
 
-        // ========================================================================================
-        // Public API (Called by Health, Animation Events, etc.)
-        // ========================================================================================
+        private void SubscribeToHealthEvents()
+        {
+            if (Health != null)
+            {
+                Health.OnHit += OnHit;
+                Health.Initialize(_config.MaxHealth, _config.HitFlashDuration);
+            }
+        }
+
+        private void SetupStunVisuals()
+        {
+            if (_stunVisuals != null && _stunVisuals.GetComponent<Core.Utils.BillBoard>() == null)
+            {
+                _stunVisuals.AddComponent<Core.Utils.BillBoard>();
+            }
+        }
+
+        private void Start()
+        {
+            EnsureOnNavMesh();
+            StateMachine.Initialize(IdleState);
+        }
+
+        private void EnsureOnNavMesh()
+        {
+            var agent = GetComponent<NavMeshAgent>();
+            if (agent != null && !agent.isOnNavMesh)
+            {
+                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
+                {
+                    agent.Warp(hit.position);
+                }
+            }
+        }
+
+        private void Update()
+        {
+            Perception.OnUpdate();
+            Mover.OnUpdate();
+            StateMachine.CurrentState?.LogicUpdate();
+        }
+
+        private void OnDestroy()
+        {
+            if (Health != null)
+            {
+                Health.OnHit -= OnHit;
+            }
+        }
 
         public void OnHit(Vector3? knockbackDir)
         {
@@ -126,18 +134,15 @@ namespace Features.Enemy
 
             if (knockbackDir.HasValue)
             {
-                Mover.ApplyKnockback(knockbackDir.Value, 5f);
+                Mover.ApplyKnockback(knockbackDir.Value, _config.KnockbackForce);
             }
-            
+
             StateMachine.ChangeState(StunnedState);
         }
 
         public void TakeDamage(float damage, Vector3 knockbackDir)
         {
-            if (Health != null)
-            {
-                Health.TakeDamage(damage, knockbackDir);
-            }
+            Health?.TakeDamage(damage, knockbackDir);
         }
 
         public void OnDeath()
@@ -150,26 +155,10 @@ namespace Features.Enemy
             if (_stunVisuals != null) _stunVisuals.SetActive(active);
         }
 
-        public GameObject StunVisuals => _stunVisuals;
+        public void SetWalking(bool isWalking) => _animationHandler.SetWalking(isWalking);
+        public void TriggerAttackAnimation() => _animationHandler.TriggerAttack();
+        public void TriggerDieAnimation() => _animationHandler.TriggerDie();
 
-        // ========================================================================================
-        // Animation Handling
-        // ========================================================================================
-
-        private void InitializeAnimatorParameters()
-        {
-            _walkParamId = Animator.StringToHash("IsWalking");
-            _attackParamId = Animator.StringToHash("Attack");
-            // _hitParamId = Animator.StringToHash("GetHit"); // Removed
-            _dieParamId = Animator.StringToHash("isDead");
-        }
-
-        public void SetWalking(bool isWalking) => Animator.SetBool(_walkParamId, isWalking);
-        public void TriggerAttackAnimation() => Animator.SetTrigger(_attackParamId);
-        // public void TriggerHitAnimation() => Animator.SetTrigger(_hitParamId); // Removed
-        public void TriggerDieAnimation() => Animator.SetTrigger(_dieParamId);
-
-        // Animation Events
         public void OnAttackHit()
         {
             if (StateMachine.CurrentState == DeadState) return;
@@ -182,8 +171,51 @@ namespace Features.Enemy
             AttackState?.FinishAttack();
         }
 
-        // Legacy Support
         public void DealDamage() => OnAttackHit();
         public void ResetDamage() => OnAttackEnd();
+    }
+
+    public sealed class EnemyAnimationHandler
+    {
+        private readonly Animator _animator;
+        private readonly int _walkParamId;
+        private readonly int _attackParamId;
+        private readonly int _dieParamId;
+
+        public EnemyAnimationHandler(Animator animator)
+        {
+            _animator = animator;
+
+            if (_animator != null)
+            {
+                _walkParamId = Animator.StringToHash("IsWalking");
+                _attackParamId = Animator.StringToHash("Attack");
+                _dieParamId = Animator.StringToHash("isDead");
+            }
+        }
+
+        public void SetWalking(bool isWalking)
+        {
+            if (_animator != null && _animator.isActiveAndEnabled)
+            {
+                _animator.SetBool(_walkParamId, isWalking);
+            }
+        }
+
+        public void TriggerAttack()
+        {
+            if (_animator != null && _animator.isActiveAndEnabled)
+            {
+                _animator.SetTrigger(_attackParamId);
+            }
+        }
+
+        public void TriggerDie()
+        {
+            if (_animator != null && _animator.isActiveAndEnabled)
+            {
+                _animator.SetTrigger(_dieParamId);
+            }
+        }
     }
 }

@@ -6,60 +6,80 @@ namespace Features.Enemy
 {
     public class EnemyPlacer : MonoBehaviour
     {
-        public GameObject enemyPrefab;
-        public int enemyCount = 5;
+        [Header("Configuration")]
+        [SerializeField] private GameObject _enemyPrefab;
+        [SerializeField] private int _enemyCount = 5;
+        [SerializeField] private float _raycastHeight = 10f;
+        [SerializeField] private float _raycastDistance = 20f;
+        [SerializeField] private float _navMeshSampleRadius = 2.0f;
 
         private Dictionary<Vector2Int, VoxelTile> _spawnedTiles;
         private Vector2Int _mapSize;
 
         public void Initialize(Dictionary<Vector2Int, VoxelTile> tiles, Vector2Int mapSize)
         {
+            if (tiles == null || tiles.Count == 0)
+            {
+                Debug.LogError("[EnemyPlacer] Tiles not assigned or empty!");
+                return;
+            }
+
             _spawnedTiles = tiles;
             _mapSize = mapSize;
-            PlaceEnemiesAndWaypoints();
+            PlaceEnemies();
         }
 
-        private void PlaceEnemiesAndWaypoints()
+        private void PlaceEnemies()
         {
-            if (_spawnedTiles == null || _spawnedTiles.Count == 0)
+            if (_enemyPrefab == null)
             {
-                Debug.LogError("spawnedTiles not assigned or empty!");
+                Debug.LogError("[EnemyPlacer] Enemy prefab not assigned!");
                 return;
             }
 
             List<Vector2Int> availablePositions = new List<Vector2Int>(_spawnedTiles.Keys);
 
-            for (int i = 0; i < enemyCount; i++)
+            for (int i = 0; i < _enemyCount; i++)
             {
                 if (availablePositions.Count == 0) break;
-                int idx = Random.Range(0, availablePositions.Count);
-                Vector2Int pos = availablePositions[idx];
-                availablePositions.RemoveAt(idx);
 
-                VoxelTile tile = _spawnedTiles[pos];
-                // Start raycast from a reasonable height above the tile
-                Vector3 rayStart = tile.transform.position + Vector3.up * 10f; 
+                Vector2Int pos = SelectAndRemoveRandomPosition(availablePositions);
+                TrySpawnEnemyAtTile(pos);
+            }
+        }
 
-                if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, 20f))
-                {
-                    // Found ground, now find nearest NavMesh point
-                    if (UnityEngine.AI.NavMesh.SamplePosition(hit.point, out UnityEngine.AI.NavMeshHit navHit, 2.0f, UnityEngine.AI.NavMesh.AllAreas))
-                    {
-                        // Instantiate at the valid NavMesh position
-                        GameObject enemy = Instantiate(enemyPrefab, navHit.position, Quaternion.identity);
-                        
-                        // Ensure agent is placed correctly (optional, as Instantiate position should be correct)
-                        var agent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>();
-                        if (agent != null)
-                        {
-                            agent.Warp(navHit.position);
-                        }
-                    }
-                    else
-                    {
-                        // Debug.LogWarning($"Could not find NavMesh near tile {pos}");
-                    }
-                }
+        private Vector2Int SelectAndRemoveRandomPosition(List<Vector2Int> positions)
+        {
+            int idx = Random.Range(0, positions.Count);
+            Vector2Int pos = positions[idx];
+            positions.RemoveAt(idx);
+            return pos;
+        }
+
+        private void TrySpawnEnemyAtTile(Vector2Int pos)
+        {
+            if (!_spawnedTiles.TryGetValue(pos, out VoxelTile tile)) return;
+
+            Vector3 rayStart = tile.transform.position + Vector3.up * _raycastHeight;
+
+            if (!Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, _raycastDistance)) return;
+
+            if (!UnityEngine.AI.NavMesh.SamplePosition(hit.point, out UnityEngine.AI.NavMeshHit navHit, _navMeshSampleRadius, UnityEngine.AI.NavMesh.AllAreas))
+            {
+                return;
+            }
+
+            SpawnEnemy(navHit.position);
+        }
+
+        private void SpawnEnemy(Vector3 position)
+        {
+            GameObject enemy = Instantiate(_enemyPrefab, position, Quaternion.identity);
+
+            var agent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.Warp(position);
             }
         }
     }

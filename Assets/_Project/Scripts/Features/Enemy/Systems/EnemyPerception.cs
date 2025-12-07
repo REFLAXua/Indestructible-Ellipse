@@ -7,54 +7,65 @@ namespace Features.Enemy.Systems
     {
         private EnemyBlackboard _blackboard;
         private Transform _cachedPlayerTransform;
-        private float _detectionCheckInterval = 0.2f;
         private float _nextCheckTime;
+        private bool _initialized;
 
         public void Initialize(EnemyBlackboard blackboard)
         {
             _blackboard = blackboard;
+            _initialized = true;
+            CachePlayerTransform();
+        }
+
+        private void CachePlayerTransform()
+        {
+            if (_cachedPlayerTransform != null) return;
+
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                _cachedPlayerTransform = player.transform;
+            }
         }
 
         public void OnUpdate()
         {
+            if (!_initialized || _blackboard?.Config == null) return;
+
             if (Time.time < _nextCheckTime) return;
-            _nextCheckTime = Time.time + _detectionCheckInterval;
+            _nextCheckTime = Time.time + _blackboard.Config.DetectionDelay;
 
             DetectPlayer();
         }
 
         private void DetectPlayer()
         {
-            if (_blackboard?.Config == null) return;
-
             if (_cachedPlayerTransform == null)
             {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
+                CachePlayerTransform();
+                if (_cachedPlayerTransform == null)
                 {
-                    _cachedPlayerTransform = player.transform;
+                    _blackboard.Target = null;
+                    _blackboard.CanAttack = false;
+                    return;
                 }
             }
 
-            if (_cachedPlayerTransform == null)
-            {
-                _blackboard.Target = null;
-                _blackboard.CanAttack = false;
-                return;
-            }
-
             float distance = Vector3.Distance(transform.position, _cachedPlayerTransform.position);
+            float detectionRange = _blackboard.Config.DetectionRange;
+            float attackRange = _blackboard.Config.AttackRange;
+            float lossMultiplier = _blackboard.Config.DetectionLossMultiplier;
 
-            if (distance <= _blackboard.Config.DetectionRange)
+            if (distance <= detectionRange)
             {
                 Vector3 directionToPlayer = (_cachedPlayerTransform.position - transform.position).normalized;
-                
-                if (Physics.Raycast(transform.position + Vector3.up, directionToPlayer, out RaycastHit hit, _blackboard.Config.DetectionRange))
+
+                if (Physics.Raycast(transform.position + Vector3.up, directionToPlayer, out RaycastHit hit, detectionRange))
                 {
                     if (hit.transform.CompareTag("Player"))
                     {
                         _blackboard.Target = _cachedPlayerTransform;
-                        _blackboard.CanAttack = distance <= _blackboard.Config.AttackRange;
+                        _blackboard.CanAttack = distance <= attackRange;
                         return;
                     }
                 }
@@ -62,7 +73,7 @@ namespace Features.Enemy.Systems
 
             if (_blackboard.Target != null)
             {
-                if (distance > _blackboard.Config.DetectionRange * 1.2f)
+                if (distance > detectionRange * lossMultiplier)
                 {
                     _blackboard.Target = null;
                     _blackboard.CanAttack = false;

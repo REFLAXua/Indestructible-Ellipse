@@ -12,6 +12,7 @@ namespace Features.Enemy.States.Concrete
 
         public override void Enter()
         {
+            Controller.Mover.Stop();
             Controller.SetWalking(false);
             _idleTimer = 0f;
         }
@@ -26,7 +27,7 @@ namespace Features.Enemy.States.Concrete
                 return;
             }
 
-            if (_idleTimer > 2f)
+            if (_idleTimer > Controller.Config.IdleToPatrolDelay)
             {
                 StateMachine.ChangeState(Controller.PatrolState);
             }

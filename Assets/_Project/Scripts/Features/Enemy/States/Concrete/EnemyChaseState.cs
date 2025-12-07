@@ -21,7 +21,9 @@ namespace Features.Enemy.States.Concrete
                 return;
             }
 
-            float distance = Vector3.Distance(Controller.transform.position, Controller.Blackboard.Target.position);
+            float distance = Vector3.Distance(
+                Controller.transform.position,
+                Controller.Blackboard.Target.position);
 
             if (distance <= Controller.Config.AttackRange)
             {
@@ -30,6 +32,11 @@ namespace Features.Enemy.States.Concrete
             }
 
             Controller.Mover.MoveTo(Controller.Blackboard.Target.position, Controller.Config.ChaseSpeed);
+        }
+
+        public override void Exit()
+        {
+            Controller.Mover.Stop();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Features.Player
     public class PlayerHealth : MonoBehaviour
     {
         [SerializeField] private float _maxHealth = 100f;
+
         public float CurrentHealth { get; private set; }
         public float MaxHealth => _maxHealth;
 
@@ -17,13 +18,15 @@ namespace Features.Player
 
         private void Start()
         {
-            EventBus.Publish(new PlayerHealthChangedEvent { CurrentHealth = CurrentHealth, MaxHealth = _maxHealth });
+            PublishHealthChanged();
         }
 
         public void TakeDamage(float amount)
         {
             CurrentHealth -= amount;
-            EventBus.Publish(new PlayerHealthChangedEvent { CurrentHealth = CurrentHealth, MaxHealth = _maxHealth });
+            CurrentHealth = Mathf.Max(0, CurrentHealth);
+
+            PublishHealthChanged();
 
             if (CurrentHealth <= 0)
             {
@@ -31,10 +34,27 @@ namespace Features.Player
             }
         }
 
+        public void Heal(float amount)
+        {
+            CurrentHealth += amount;
+            CurrentHealth = Mathf.Min(CurrentHealth, _maxHealth);
+
+            PublishHealthChanged();
+        }
+
         private void Die()
         {
             EventBus.Publish(new PlayerDiedEvent());
-            Destroy(gameObject); // Or disable, or play animation
+            Destroy(gameObject);
+        }
+
+        private void PublishHealthChanged()
+        {
+            EventBus.Publish(new PlayerHealthChangedEvent
+            {
+                CurrentHealth = CurrentHealth,
+                MaxHealth = _maxHealth
+            });
         }
     }
 }

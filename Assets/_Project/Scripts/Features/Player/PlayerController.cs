@@ -9,8 +9,14 @@ namespace Features.Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
+        [Header("Configuration")]
         [SerializeField] private PlayerConfigSO _config;
+
+        [Header("Visuals")]
+        [SerializeField] private GameObject _stunVisuals;
+
         public PlayerConfigSO Config => _config;
+        public GameObject StunVisuals => _stunVisuals;
 
         public CharacterController Controller { get; private set; }
         public Animator Animator { get; private set; }
@@ -29,29 +35,50 @@ namespace Features.Player
 
         public PlayerCombat Combat { get; private set; }
         public float AttackCooldownTimer;
-
-        public Vector3 Velocity; 
+        public Vector3 Velocity;
         public float SpeedMultiplier { get; private set; } = 1f;
-        
-        // Rotation State
-        public float RotationVelocity; // Used by SmoothDamp
+        public float RotationVelocity;
+        public bool IsRotationSlowed { get; set; }
+
         private float _targetRotation;
 
         private void Awake()
+        {
+            CacheComponents();
+            SetupCombat();
+            CacheMainCamera();
+            InitializeStateMachine();
+            SetupStunVisuals();
+        }
+
+        private void CacheComponents()
         {
             Controller = GetComponent<CharacterController>();
             Animator = GetComponent<Animator>();
             Stamina = GetComponent<PlayerStamina>();
             Health = GetComponent<PlayerHealth>();
+        }
+
+        private void SetupCombat()
+        {
             Combat = gameObject.AddComponent<PlayerCombat>();
             Combat.Initialize(this);
-            
-            // Cache Camera to avoid FindTag overhead
-            if (UnityEngine.Camera.main != null)
-                MainCameraTransform = UnityEngine.Camera.main.transform;
-            else
-                Debug.LogError("Main Camera not found! Player movement depends on camera view.");
+        }
 
+        private void CacheMainCamera()
+        {
+            if (UnityEngine.Camera.main != null)
+            {
+                MainCameraTransform = UnityEngine.Camera.main.transform;
+            }
+            else
+            {
+                Debug.LogError("[PlayerController] Main Camera not found! Player movement depends on camera view.");
+            }
+        }
+
+        private void InitializeStateMachine()
+        {
             StateMachine = new PlayerStateMachine();
             IdleState = new PlayerIdleState(this, StateMachine);
             MoveState = new PlayerMoveState(this, StateMachine);
@@ -59,31 +86,26 @@ namespace Features.Player
             AirState = new PlayerAirState(this, StateMachine);
             StunnedState = new PlayerStunnedState(this, StateMachine);
             AttackState = new PlayerAttackState(this, StateMachine);
-
-            if (_stunVisuals != null)
-            {
-                if (_stunVisuals.GetComponent<Core.Utils.BillBoard>() == null)
-                {
-                    _stunVisuals.AddComponent<Core.Utils.BillBoard>();
-                }
-            }
         }
 
-        [Header("Visuals")]
-        [SerializeField] private GameObject _stunVisuals;
+        private void SetupStunVisuals()
+        {
+            if (_stunVisuals != null && _stunVisuals.GetComponent<Core.Utils.BillBoard>() == null)
+            {
+                _stunVisuals.AddComponent<Core.Utils.BillBoard>();
+            }
+        }
 
         public void SetStunVisuals(bool active)
         {
             if (_stunVisuals != null) _stunVisuals.SetActive(active);
         }
 
-        public GameObject StunVisuals => _stunVisuals;
-
         private void Start()
         {
             if (!ServiceLocator.TryGet(out IInputService inputService))
             {
-                Debug.LogError("InputService not found!");
+                Debug.LogError("[PlayerController] InputService not found!");
                 return;
             }
             InputService = inputService;
@@ -98,11 +120,8 @@ namespace Features.Player
                 AttackCooldownTimer -= Time.deltaTime;
             }
 
-            StateMachine.CurrentState.LogicUpdate();
-            
+            StateMachine.CurrentState?.LogicUpdate();
             ApplyGravity();
-            
-            // Final Move Execution
             Controller.Move(Velocity * Time.deltaTime);
         }
 
@@ -110,12 +129,10 @@ namespace Features.Player
         {
             if (Controller.isGrounded && Velocity.y < 0)
             {
-                Velocity.y = -2f; // Stick to ground
+                Velocity.y = _config.GroundStickForce;
             }
             Velocity.y += _config.Gravity * Time.deltaTime;
         }
-
-        public bool IsRotationSlowed { get; set; }
 
         public void RotateTowardsMoveDirection(Vector3 direction)
         {
@@ -135,29 +152,30 @@ namespace Features.Player
 
         private void ApplyRotationWithSlow(float targetRotation)
         {
-            float smoothTime = IsRotationSlowed ? _config.RotationSmoothTime * 1.5f : _config.RotationSmoothTime;
+            float smoothTime = IsRotationSlowed 
+                ? _config.RotationSmoothTime * _config.SlowedRotationMultiplier 
+                : _config.RotationSmoothTime;
+
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref RotationVelocity, smoothTime);
-            
+
             if (IsRotationSlowed)
             {
-                RotationVelocity *= 0.8f;
+                RotationVelocity *= _config.SlowedVelocityDamping;
             }
-            
+
             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
 
         public float GetMovementMultiplierWithSlow(float baseMultiplier)
         {
-            return IsRotationSlowed ? baseMultiplier * 0.5f : baseMultiplier;
+            return IsRotationSlowed ? baseMultiplier * _config.SlowedMoveMultiplier : baseMultiplier;
         }
 
-        // Animation event callback for legacy SensitivitySlow naming
         public void SensitivitySlow(float slowDuration)
         {
             IsRotationSlowed = true;
         }
 
-        // Animation event callback to restore normal rotation
         public void SensitivityNormal()
         {
             IsRotationSlowed = false;
@@ -167,10 +185,7 @@ namespace Features.Player
         {
             if (MainCameraTransform == null) return Vector3.zero;
 
-            // Normalize input direction
             Vector3 inputDir = new Vector3(input.x, 0.0f, input.y).normalized;
-
-            // Rotate input direction by camera rotation
             float targetRotation = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + MainCameraTransform.eulerAngles.y;
             return Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
         }
@@ -188,7 +203,6 @@ namespace Features.Player
                 Health.TakeDamage(amount);
                 if (Health.CurrentHealth <= 0)
                 {
-                    // PlayerHealth handles death (e.g. Destroy or Event)
                     return;
                 }
             }
@@ -197,8 +211,7 @@ namespace Features.Player
             StateMachine.ChangeState(StunnedState);
         }
 
-         // Animation Events for Combat
-         public void EnableDamage() => Combat.EnableDamage();
-         public void DisableDamage() => Combat.DisableDamage();
+        public void EnableDamage() => Combat?.EnableDamage();
+        public void DisableDamage() => Combat?.DisableDamage();
     }
 }

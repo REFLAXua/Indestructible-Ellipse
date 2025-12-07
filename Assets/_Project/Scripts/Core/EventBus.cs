@@ -4,52 +4,103 @@ using UnityEngine;
 
 namespace Core
 {
-    /// <summary>
-    /// A generic Event Bus for decoupled communication between systems.
-    /// </summary>
     public static class EventBus
     {
+        private static readonly object _lock = new object();
         private static readonly Dictionary<Type, List<Delegate>> _events = new Dictionary<Type, List<Delegate>>();
 
-        /// <summary>
-        /// Subscribes a listener to an event type.
-        /// </summary>
         public static void Subscribe<T>(Action<T> listener)
         {
-            var type = typeof(T);
-            if (!_events.ContainsKey(type))
+            if (listener == null)
             {
-                _events[type] = new List<Delegate>();
+                Debug.LogWarning("[EventBus] Attempting to subscribe null listener!");
+                return;
             }
-            _events[type].Add(listener);
+
+            var type = typeof(T);
+            lock (_lock)
+            {
+                if (!_events.ContainsKey(type))
+                {
+                    _events[type] = new List<Delegate>();
+                }
+                _events[type].Add(listener);
+            }
         }
 
-        /// <summary>
-        /// Unsubscribes a listener from an event type.
-        /// </summary>
         public static void Unsubscribe<T>(Action<T> listener)
         {
+            if (listener == null) return;
+
             var type = typeof(T);
-            if (_events.ContainsKey(type))
+            lock (_lock)
             {
-                _events[type].Remove(listener);
+                if (_events.ContainsKey(type))
+                {
+                    _events[type].Remove(listener);
+                }
             }
         }
 
-        /// <summary>
-        /// Publishes an event to all subscribers.
-        /// </summary>
         public static void Publish<T>(T eventMessage)
         {
             var type = typeof(T);
-            if (_events.TryGetValue(type, out var listeners))
+            List<Delegate> listenersCopy;
+
+            lock (_lock)
             {
-                // Iterate backwards to allow unsubscription during event handling
-                for (int i = listeners.Count - 1; i >= 0; i--)
+                if (!_events.TryGetValue(type, out var listeners) || listeners.Count == 0)
                 {
-                    (listeners[i] as Action<T>)?.Invoke(eventMessage);
+                    return;
+                }
+                listenersCopy = new List<Delegate>(listeners);
+            }
+
+            for (int i = listenersCopy.Count - 1; i >= 0; i--)
+            {
+                try
+                {
+                    (listenersCopy[i] as Action<T>)?.Invoke(eventMessage);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[EventBus] Exception in event handler for {type.Name}: {ex.Message}\n{ex.StackTrace}");
                 }
             }
+        }
+
+        public static void ClearAll()
+        {
+            lock (_lock)
+            {
+                _events.Clear();
+            }
+            Debug.Log("[EventBus] All subscriptions cleared.");
+        }
+
+        public static void ClearSubscriptions<T>()
+        {
+            var type = typeof(T);
+            lock (_lock)
+            {
+                if (_events.ContainsKey(type))
+                {
+                    _events[type].Clear();
+                }
+            }
+        }
+
+        public static int GetSubscriberCount<T>()
+        {
+            var type = typeof(T);
+            lock (_lock)
+            {
+                if (_events.TryGetValue(type, out var listeners))
+                {
+                    return listeners.Count;
+                }
+            }
+            return 0;
         }
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7664834441860520048}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 5946919970459718038}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 5294298662559709838}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 5318828052612656652}
   m_Layer: 0
   m_Name: StunMark
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 654075896219742547}
   m_Layer: 5
   m_Name: Handle Slide Area
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -370,11 +370,12 @@ GameObject:
   - component: {fileID: 2382649061309407358}
   - component: {fileID: 1208516408082364613}
   - component: {fileID: 1096721233081042863}
-  - component: {fileID: 3634619888343095254}
   - component: {fileID: 6375987577077493972}
   - component: {fileID: 8051815652755749418}
   - component: {fileID: 4536076935505641116}
   - component: {fileID: 2995040550277170410}
+  - component: {fileID: 118158582528985370}
+  - component: {fileID: -5978876920844040206}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -447,29 +448,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!136 &3634619888343095254
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279562228005625462}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6375987577077493972
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -541,6 +519,59 @@ MonoBehaviour:
   _healthSlider: {fileID: 4611331503158639807}
   _canvas: {fileID: 2300784510942089443}
   _billboard: 1
+--- !u!114 &118158582528985370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4279562228005625462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c42be6ec6d1a641b12167c9152a900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _experienceAmount: 1
+  _goldAmount: 3
+--- !u!114 &-5978876920844040206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4279562228005625462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43d9193546996154f84c6dba3aecc7f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _floatDuration: 2
+  _floatHeight: 2
+  _xpNumberSprites:
+  - {fileID: 421240150, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: 2057096292, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: 681658247, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: -772515941, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: 706675386, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: 1169693078, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: 1624461291, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: -371664402, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: -1225510763, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  - {fileID: -461710622, guid: 40eb16deb9aa7554187dc5cfd66c6d2f, type: 3}
+  _goldNumberSprites:
+  - {fileID: -1968731439, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: 898430602, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: -817279734, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: 585788333, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: 1304438417, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: -1603797578, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: 1546680993, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: -352066214, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: -770699198, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  - {fileID: -1277146162, guid: 3fde5b636e445ab4d914fe494454a660, type: 3}
+  _spriteScale: 5
+  _digitSpacing: 0.4
+  _numberGroupSpacing: 1
 --- !u!1 &4984644486710493310
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +585,7 @@ GameObject:
   - component: {fileID: 1986597902742018389}
   m_Layer: 5
   m_Name: Background
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -627,7 +658,7 @@ GameObject:
   - component: {fileID: 6637690721065540013}
   m_Layer: 5
   m_Name: Fill Area
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -664,7 +695,7 @@ GameObject:
   - component: {fileID: 7548347027086419656}
   m_Layer: 0
   m_Name: Sprite
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -747,7 +778,7 @@ GameObject:
   - component: {fileID: 4266851035412721286}
   m_Layer: 0
   m_Name: EffectUI
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -779,9 +810,10 @@ GameObject:
   - component: {fileID: 6387182512788679949}
   - component: {fileID: 2027081919470368988}
   - component: {fileID: 5396740632173177879}
+  - component: {fileID: 1968506692620210452}
   m_Layer: 0
   m_Name: ArmL
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -851,6 +883,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1968506692620210452
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299308178984035143}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: -0.000015258789, y: 0, z: 0}
 --- !u!1 &6725715431886795451
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,7 +916,7 @@ GameObject:
   - component: {fileID: 4611331503158639807}
   m_Layer: 5
   m_Name: Slider
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -954,7 +1007,7 @@ GameObject:
   - component: {fileID: 6376374105162887601}
   m_Layer: 0
   m_Name: Sphere (1)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1035,9 +1088,10 @@ GameObject:
   - component: {fileID: 4907213034296878197}
   - component: {fileID: 7433996808265653208}
   - component: {fileID: 4755622245527000186}
+  - component: {fileID: 5368274541657181027}
   m_Layer: 0
   m_Name: ArmR
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1107,6 +1161,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5368274541657181027
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840250463494920971}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1.0000001}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8467523105879308441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,7 +1195,7 @@ GameObject:
   - component: {fileID: 1124905829183794370}
   m_Layer: 5
   m_Name: Fill
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -8,31 +8,32 @@ namespace Features.Player.States
 
         public override void Enter()
         {
-            _player.Velocity.x = 0;
-            _player.Velocity.z = 0;
+            Player.Velocity.x = 0;
+            Player.Velocity.z = 0;
         }
 
         public override void LogicUpdate()
         {
-            if (_player.InputService.IsAimPressed)
+            if (Player.InputService.IsAimPressed)
             {
-                _player.RotateTowardsCamera();
+                Player.RotateTowardsCamera();
             }
 
-            if (_player.InputService.IsAttackPressed && _player.AttackCooldownTimer <= 0)
+            if (Player.InputService.IsAttackPressed && Player.AttackCooldownTimer <= 0)
             {
-                _stateMachine.ChangeState(_player.AttackState);
+                StateMachine.ChangeState(Player.AttackState);
                 return;
             }
 
-            if (_player.InputService.MoveInput != Vector2.zero)
+            if (Player.InputService.MoveInput != Vector2.zero)
             {
-                _stateMachine.ChangeState(_player.MoveState);
+                StateMachine.ChangeState(Player.MoveState);
+                return;
             }
 
-            if (_player.InputService.IsJumpPressed && _player.CheckGround())
+            if (Player.InputService.IsJumpPressed && Player.CheckGround())
             {
-                _stateMachine.ChangeState(_player.JumpState);
+                StateMachine.ChangeState(Player.JumpState);
             }
         }
     }
@@ -43,21 +44,21 @@ namespace Features.Player.States
 
         public override void LogicUpdate()
         {
-            if (_player.InputService.MoveInput == Vector2.zero)
+            if (Player.InputService.MoveInput == Vector2.zero)
             {
-                _stateMachine.ChangeState(_player.IdleState);
+                StateMachine.ChangeState(Player.IdleState);
                 return;
             }
 
-            if (_player.InputService.IsAttackPressed && _player.AttackCooldownTimer <= 0)
+            if (Player.InputService.IsAttackPressed && Player.AttackCooldownTimer <= 0)
             {
-                _stateMachine.ChangeState(_player.AttackState);
+                StateMachine.ChangeState(Player.AttackState);
                 return;
             }
 
-            if (_player.InputService.IsJumpPressed && _player.CheckGround())
+            if (Player.InputService.IsJumpPressed && Player.CheckGround())
             {
-                _stateMachine.ChangeState(_player.JumpState);
+                StateMachine.ChangeState(Player.JumpState);
                 return;
             }
 
@@ -66,50 +67,40 @@ namespace Features.Player.States
 
         private void Move()
         {
-            Vector2 input = _player.InputService.MoveInput;
-            
-            // Get direction relative to camera
-            Vector3 moveDir = _player.GetMoveDirection(input);
+            Vector2 input = Player.InputService.MoveInput;
+            Vector3 moveDir = Player.GetMoveDirection(input);
 
-            // Rotate Player smoothly
-            if (_player.InputService.IsAimPressed)
+            if (Player.InputService.IsAimPressed)
             {
-                _player.RotateTowardsCamera();
+                Player.RotateTowardsCamera();
             }
             else
             {
-                _player.RotateTowardsMoveDirection(new Vector3(input.x, 0, input.y));
+                Player.RotateTowardsMoveDirection(new Vector3(input.x, 0, input.y));
             }
 
-            // Sprint Logic
-            bool isSprinting = _player.InputService.IsSprintPressed;
-            if (isSprinting && _player.Stamina != null)
-            {
-                if (_player.Stamina.CanConsume(_config.SprintStaminaCost * Time.deltaTime) && !_player.Stamina.IsExhausted)
-                {
-                    _player.Stamina.Consume(_config.SprintStaminaCost * Time.deltaTime);
-                }
-                else
-                {
-                    isSprinting = false;
-                }
-            }
-            else if (isSprinting && _player.Stamina == null)
-            {
-                isSprinting = false;
-            }
+            bool isSprinting = DetermineSprinting();
+            float targetSpeed = isSprinting ? Config.SprintSpeed : Config.BaseSpeed;
+            targetSpeed *= Player.SpeedMultiplier;
 
-            float targetSpeed = isSprinting ? _config.SprintSpeed : _config.BaseSpeed;
-            targetSpeed *= _player.SpeedMultiplier;
-
-            // Apply movement velocity (keeping Y gravity separate in Controller)
             Vector3 targetVelocity = moveDir * targetSpeed;
-            
-            _player.Velocity.x = targetVelocity.x;
-            _player.Velocity.z = targetVelocity.z;
+            Player.Velocity.x = targetVelocity.x;
+            Player.Velocity.z = targetVelocity.z;
         }
-        
 
+        private bool DetermineSprinting()
+        {
+            if (!Player.InputService.IsSprintPressed) return false;
+            if (Player.Stamina == null) return false;
+
+            float staminaCost = Config.SprintStaminaCost * Time.deltaTime;
+            if (Player.Stamina.CanConsume(staminaCost) && !Player.Stamina.IsExhausted)
+            {
+                Player.Stamina.Consume(staminaCost);
+                return true;
+            }
+            return false;
+        }
     }
 
     public class PlayerJumpState : PlayerState
@@ -118,15 +109,15 @@ namespace Features.Player.States
 
         public override void Enter()
         {
-            if (_player.Stamina != null && _player.Stamina.CanConsume(_config.JumpStaminaCost) && !_player.Stamina.IsExhausted)
+            if (Player.Stamina != null && Player.Stamina.CanConsume(Config.JumpStaminaCost) && !Player.Stamina.IsExhausted)
             {
-                _player.Stamina.Consume(_config.JumpStaminaCost);
-                _player.Velocity.y = _config.JumpForce;
-                _stateMachine.ChangeState(_player.AirState);
+                Player.Stamina.Consume(Config.JumpStaminaCost);
+                Player.Velocity.y = Config.JumpForce;
+                StateMachine.ChangeState(Player.AirState);
             }
             else
             {
-                _stateMachine.ChangeState(_player.IdleState);
+                StateMachine.ChangeState(Player.IdleState);
             }
         }
     }
@@ -139,40 +130,48 @@ namespace Features.Player.States
 
         public override void Enter()
         {
-            float currentHorizontalSpeed = new Vector3(_player.Velocity.x, 0, _player.Velocity.z).magnitude;
-            _targetSpeed = Mathf.Max(currentHorizontalSpeed, _config.BaseSpeed);
+            float currentHorizontalSpeed = new Vector3(Player.Velocity.x, 0, Player.Velocity.z).magnitude;
+            _targetSpeed = Mathf.Max(currentHorizontalSpeed, Config.BaseSpeed);
         }
 
         public override void LogicUpdate()
         {
-            // Air Control
-            Vector2 input = _player.InputService.MoveInput;
-            // Rotation Logic
-            if (_player.InputService.IsAimPressed)
+            Vector2 input = Player.InputService.MoveInput;
+
+            HandleRotation(input);
+            HandleAirMovement(input);
+            CheckLanding();
+        }
+
+        private void HandleRotation(Vector2 input)
+        {
+            if (Player.InputService.IsAimPressed)
             {
-                _player.RotateTowardsCamera();
+                Player.RotateTowardsCamera();
             }
             else if (input.magnitude > 0.1f)
             {
-                _player.RotateTowardsMoveDirection(new Vector3(input.x, 0, input.y));
+                Player.RotateTowardsMoveDirection(new Vector3(input.x, 0, input.y));
             }
+        }
 
-            // Movement Logic
-            if (input.magnitude > 0.1f)
+        private void HandleAirMovement(Vector2 input)
+        {
+            if (input.magnitude <= 0.1f) return;
+
+            Vector3 moveDir = Player.GetMoveDirection(input);
+            Vector3 targetVelocity = moveDir * _targetSpeed;
+
+            float airControl = Config.AirControlMultiplier;
+            Player.Velocity.x = Mathf.Lerp(Player.Velocity.x, targetVelocity.x, Time.deltaTime * airControl);
+            Player.Velocity.z = Mathf.Lerp(Player.Velocity.z, targetVelocity.z, Time.deltaTime * airControl);
+        }
+
+        private void CheckLanding()
+        {
+            if (Player.CheckGround() && Player.Velocity.y < 0)
             {
-                 Vector3 moveDir = _player.GetMoveDirection(input);
-
-                 // Use the captured target speed to maintain momentum
-                 Vector3 targetVelocity = moveDir * _targetSpeed;
-                 
-                 // Smoothly interpolate air movement
-                 _player.Velocity.x = Mathf.Lerp(_player.Velocity.x, targetVelocity.x, Time.deltaTime * 5f);
-                 _player.Velocity.z = Mathf.Lerp(_player.Velocity.z, targetVelocity.z, Time.deltaTime * 5f);
-            }
-
-            if (_player.CheckGround() && _player.Velocity.y < 0)
-            {
-                _stateMachine.ChangeState(_player.IdleState);
+                StateMachine.ChangeState(Player.IdleState);
             }
         }
     }
@@ -187,109 +186,113 @@ namespace Features.Player.States
 
         public void SetKnockback(Vector3 direction)
         {
-            _knockbackVelocity = direction * _config.KnockbackForce;
+            _knockbackVelocity = direction * Config.KnockbackForce;
         }
 
         public override void Enter()
         {
-            _stunTimer = _config.StunDuration;
-            
-            // Apply initial knockback velocity
-            _player.Velocity.x = _knockbackVelocity.x;
-            _player.Velocity.z = _knockbackVelocity.z;
-            
-            // Enable Stun Visuals
-            _player.SetStunVisuals(true);
+            _stunTimer = Config.StunDuration;
 
-            if (_player.StunVisuals != null)
+            Player.Velocity.x = _knockbackVelocity.x;
+            Player.Velocity.z = _knockbackVelocity.z;
+
+            Player.SetStunVisuals(true);
+
+            var stunVisuals = Player.StunVisuals;
+            if (stunVisuals != null)
             {
-                _billboard = _player.StunVisuals.GetComponent<Core.Utils.BillBoard>();
+                _billboard = stunVisuals.GetComponent<Core.Utils.BillBoard>();
             }
         }
 
         public override void LogicUpdate()
         {
             _stunTimer -= Time.deltaTime;
-            
+
             if (_billboard != null)
             {
-                // Rotate 200 degrees per second
-                _billboard.ZRotation += 200f * Time.deltaTime;
+                _billboard.ZRotation += Config.StunRotationSpeed * Time.deltaTime;
             }
 
-            // Apply friction/drag to knockback to simulate weight
-            _player.Velocity.x = Mathf.Lerp(_player.Velocity.x, 0, Time.deltaTime * 5f);
-            _player.Velocity.z = Mathf.Lerp(_player.Velocity.z, 0, Time.deltaTime * 5f);
+            float dragSpeed = Config.KnockbackDragSpeed;
+            Player.Velocity.x = Mathf.Lerp(Player.Velocity.x, 0, Time.deltaTime * dragSpeed);
+            Player.Velocity.z = Mathf.Lerp(Player.Velocity.z, 0, Time.deltaTime * dragSpeed);
 
             if (_stunTimer <= 0)
             {
-                _stateMachine.ChangeState(_player.IdleState);
+                StateMachine.ChangeState(Player.IdleState);
             }
         }
 
         public override void Exit()
         {
-            _player.SetStunVisuals(false);
+            Player.SetStunVisuals(false);
             if (_billboard != null)
             {
                 _billboard.ZRotation = 0f;
             }
+            _billboard = null;
         }
     }
 
     public class PlayerAttackState : PlayerState
     {
         private float _attackTimer;
-        private float _attackDuration = 0.5f;
 
         public PlayerAttackState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine) { }
 
         public override void Enter()
         {
-            _player.Velocity.x = 0;
-            _player.Velocity.z = 0;
-            _player.Animator.SetTrigger("Attack");
-            _player.AttackCooldownTimer = _config.AttackCooldown;
-            _attackTimer = _attackDuration;
+            Player.Velocity.x = 0;
+            Player.Velocity.z = 0;
+            Player.Animator.SetTrigger("Attack");
+            Player.AttackCooldownTimer = Config.AttackCooldown;
+            _attackTimer = Config.AttackDuration;
         }
 
         public override void LogicUpdate()
         {
             _attackTimer -= Time.deltaTime;
 
-            Vector2 input = _player.InputService.MoveInput;
-            
-            // Rotation with built-in slow
-            if (_player.InputService.IsAimPressed)
-            {
-                _player.RotateTowardsCamera();
-            }
-            else if (input.magnitude > 0.01f)
-            {
-                _player.RotateTowardsMoveDirection(new Vector3(input.x, 0, input.y));
-            }
+            Vector2 input = Player.InputService.MoveInput;
 
-            // Movement with centralized slow multiplier
-            if (input.magnitude > 0.01f)
-            {
-                Vector3 moveDir = _player.GetMoveDirection(input);
-                float baseAttackMultiplier = 0.4f;
-                float slowedMultiplier = _player.GetMovementMultiplierWithSlow(baseAttackMultiplier);
-                float moveSpeed = _config.BaseSpeed * slowedMultiplier * _player.SpeedMultiplier;
-                Vector3 targetVelocity = moveDir * moveSpeed;
-
-                _player.Velocity.x = targetVelocity.x;
-                _player.Velocity.z = targetVelocity.z;
-            }
-            else
-            {
-                _player.Velocity.x = 0;
-                _player.Velocity.z = 0;
-            }
+            HandleRotation(input);
+            HandleSlowedMovement(input);
 
             if (_attackTimer <= 0)
             {
-                _stateMachine.ChangeState(_player.IdleState);
+                StateMachine.ChangeState(Player.IdleState);
+            }
+        }
+
+        private void HandleRotation(Vector2 input)
+        {
+            if (Player.InputService.IsAimPressed)
+            {
+                Player.RotateTowardsCamera();
+            }
+            else if (input.magnitude > 0.01f)
+            {
+                Player.RotateTowardsMoveDirection(new Vector3(input.x, 0, input.y));
+            }
+        }
+
+        private void HandleSlowedMovement(Vector2 input)
+        {
+            if (input.magnitude > 0.01f)
+            {
+                Vector3 moveDir = Player.GetMoveDirection(input);
+                float slowedMultiplier = Player.GetMovementMultiplierWithSlow(Config.AttackMoveMultiplier);
+                float moveSpeed = Config.BaseSpeed * slowedMultiplier * Player.SpeedMultiplier;
+                Vector3 targetVelocity = moveDir * moveSpeed;
+
+                Player.Velocity.x = targetVelocity.x;
+                Player.Velocity.z = targetVelocity.z;
+            }
+            else
+            {
+                Player.Velocity.x = 0;
+                Player.Velocity.z = 0;
             }
         }
     }

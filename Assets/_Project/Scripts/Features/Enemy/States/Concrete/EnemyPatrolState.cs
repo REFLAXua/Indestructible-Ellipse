@@ -11,7 +11,7 @@ namespace Features.Enemy.States.Concrete
         public override void Enter()
         {
             Controller.SetWalking(true);
-            Vector3 randomPoint = GetRandomPoint(Controller.transform.position, 10f);
+            Vector3 randomPoint = GetRandomPoint(Controller.transform.position, Controller.Config.PatrolRadius);
             Controller.Mover.MoveTo(randomPoint, Controller.Config.PatrolSpeed);
         }
 
@@ -32,8 +32,7 @@ namespace Features.Enemy.States.Concrete
         private Vector3 GetRandomPoint(Vector3 center, float range)
         {
             Vector3 randomPoint = center + Random.insideUnitSphere * range;
-            UnityEngine.AI.NavMeshHit hit;
-            if (UnityEngine.AI.NavMesh.SamplePosition(randomPoint, out hit, 1.0f, UnityEngine.AI.NavMesh.AllAreas))
+            if (UnityEngine.AI.NavMesh.SamplePosition(randomPoint, out UnityEngine.AI.NavMeshHit hit, 1.0f, UnityEngine.AI.NavMesh.AllAreas))
             {
                 return hit.position;
             }

@@ -134,9 +134,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 81fa0e2566f32af4c8226bde14810008, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4529314230997674844}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: 81fa0e2566f32af4c8226bde14810008, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6267623574543120089}
@@ -173,31 +170,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 81fa0e2566f32af4c8226bde14810008, type: 3}
   m_PrefabInstance: {fileID: 780308249865766236}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8788171240620760149 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 81fa0e2566f32af4c8226bde14810008, type: 3}
-  m_PrefabInstance: {fileID: 780308249865766236}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4529314230997674844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8788171240620760149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!1001 &2953040416982978235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -286,9 +258,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: b7ea68b241166514f8734f080bedd1e4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1728158115282617075}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: b7ea68b241166514f8734f080bedd1e4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5651211300465738207}
@@ -320,31 +289,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: b7ea68b241166514f8734f080bedd1e4, type: 3}
---- !u!1 &6618782421576521650 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: b7ea68b241166514f8734f080bedd1e4, type: 3}
-  m_PrefabInstance: {fileID: 2953040416982978235}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1728158115282617075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6618782421576521650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!4 &7890863258737698209 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: b7ea68b241166514f8734f080bedd1e4, type: 3}
@@ -458,9 +402,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: c01779398cf915740bc66d7fd3d8f2e2, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5501266079492102102}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: c01779398cf915740bc66d7fd3d8f2e2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7050594147022514074}
@@ -492,31 +433,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: c01779398cf915740bc66d7fd3d8f2e2, type: 3}
---- !u!1 &6909947400822840986 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: c01779398cf915740bc66d7fd3d8f2e2, type: 3}
-  m_PrefabInstance: {fileID: 3225982073598805907}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5501266079492102102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6909947400822840986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!4 &7619608245173955721 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: c01779398cf915740bc66d7fd3d8f2e2, type: 3}
@@ -610,9 +526,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: a017cbbe917ba4149a0cbaece9e72dc0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3785109649980048505}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: a017cbbe917ba4149a0cbaece9e72dc0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2390636107384233719}
@@ -644,31 +557,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: a017cbbe917ba4149a0cbaece9e72dc0, type: 3}
---- !u!1 &5190891024377506563 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: a017cbbe917ba4149a0cbaece9e72dc0, type: 3}
-  m_PrefabInstance: {fileID: 4262748256201060874}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3785109649980048505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5190891024377506563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!4 &9102590936744859920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: a017cbbe917ba4149a0cbaece9e72dc0, type: 3}
@@ -766,9 +654,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 3cd4c6b58bcfab64d99c6915f2ed5483, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 371199432660696601}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: 3cd4c6b58bcfab64d99c6915f2ed5483, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3968316510261053959}
@@ -778,31 +663,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 3cd4c6b58bcfab64d99c6915f2ed5483, type: 3}
   m_PrefabInstance: {fileID: 4671911860752346870}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3743645793863383039 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 3cd4c6b58bcfab64d99c6915f2ed5483, type: 3}
-  m_PrefabInstance: {fileID: 4671911860752346870}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &371199432660696601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3743645793863383039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!1 &7203596305592242786 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2534866581884222612, guid: 3cd4c6b58bcfab64d99c6915f2ed5483, type: 3}
@@ -922,9 +782,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 06cfe3d215db2df4b85c4ee184a6a763, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5903494638398859268}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: 06cfe3d215db2df4b85c4ee184a6a763, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3796421887586080395}
@@ -934,31 +791,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 06cfe3d215db2df4b85c4ee184a6a763, type: 3}
   m_PrefabInstance: {fileID: 4814140070360793756}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3598006620574653333 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 06cfe3d215db2df4b85c4ee184a6a763, type: 3}
-  m_PrefabInstance: {fileID: 4814140070360793756}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5903494638398859268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3598006620574653333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!1 &7053452145133354504 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2534866581884222612, guid: 06cfe3d215db2df4b85c4ee184a6a763, type: 3}
@@ -1074,9 +906,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: e92dc21e6aa8b244db7db6622029bd5e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5948095538045692416}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: e92dc21e6aa8b244db7db6622029bd5e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3535556654694353484}
@@ -1086,31 +915,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: e92dc21e6aa8b244db7db6622029bd5e, type: 3}
   m_PrefabInstance: {fileID: 4997481532249348062}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3925858973256994519 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: e92dc21e6aa8b244db7db6622029bd5e, type: 3}
-  m_PrefabInstance: {fileID: 4997481532249348062}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5948095538045692416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3925858973256994519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!1 &7383433061598997322 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2534866581884222612, guid: e92dc21e6aa8b244db7db6622029bd5e, type: 3}
@@ -1246,9 +1050,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: d99ad73a26dec924f84377da3fafbab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5500874614097649046}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: d99ad73a26dec924f84377da3fafbab5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1488897635892158787}
@@ -1258,31 +1059,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: d99ad73a26dec924f84377da3fafbab5, type: 3}
   m_PrefabInstance: {fileID: 5315412930509988911}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4244025769281436966 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: d99ad73a26dec924f84377da3fafbab5, type: 3}
-  m_PrefabInstance: {fileID: 5315412930509988911}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5500874614097649046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4244025769281436966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!1 &7703834169132406971 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2534866581884222612, guid: d99ad73a26dec924f84377da3fafbab5, type: 3}
@@ -1402,9 +1178,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: a847eac1178617146bff5d6d0fb24793, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 238254480374920034}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: a847eac1178617146bff5d6d0fb24793, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4456163216084682651}
@@ -1414,31 +1187,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: a847eac1178617146bff5d6d0fb24793, type: 3}
   m_PrefabInstance: {fileID: 5793763720395272919}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2541851523814255582 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: a847eac1178617146bff5d6d0fb24793, type: 3}
-  m_PrefabInstance: {fileID: 5793763720395272919}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &238254480374920034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2541851523814255582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!1 &8307508339701648963 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2534866581884222612, guid: a847eac1178617146bff5d6d0fb24793, type: 3}
@@ -1558,38 +1306,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: fe49a42f0d7802042a30b03db41e6b7f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 36868612874468401}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: fe49a42f0d7802042a30b03db41e6b7f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8135082468333183031}
   m_SourcePrefab: {fileID: 100100000, guid: fe49a42f0d7802042a30b03db41e6b7f, type: 3}
---- !u!1 &36393128910314392 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: fe49a42f0d7802042a30b03db41e6b7f, type: 3}
-  m_PrefabInstance: {fileID: 8331842163750568593}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &36868612874468401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 36393128910314392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!4 &3952491978152749451 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: fe49a42f0d7802042a30b03db41e6b7f, type: 3}
@@ -1714,38 +1434,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: f4c877ba25c6c8547939da2d2e64bbef, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5051870314066337162}
     - targetCorrespondingSourceObject: {fileID: 2534866581884222612, guid: f4c877ba25c6c8547939da2d2e64bbef, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3324579767023690684}
   m_SourcePrefab: {fileID: 100100000, guid: f4c877ba25c6c8547939da2d2e64bbef, type: 3}
---- !u!1 &1085283837884506273 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: f4c877ba25c6c8547939da2d2e64bbef, type: 3}
-  m_PrefabInstance: {fileID: 8948193898469751208}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5051870314066337162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1085283837884506273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 983f5e12dc48f604481051746b4cba9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelSize: 1.3
-  TileSideVoxels: 8
-  Weight: 16
-  Rotation: 2
-  ColorsRight: 
-  ColorsForward: 
-  ColorsLeft: 
-  ColorsBack: 
 --- !u!4 &4131184311993029298 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: f4c877ba25c6c8547939da2d2e64bbef, type: 3}
